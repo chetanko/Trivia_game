@@ -170,25 +170,55 @@ function resolveCorrectAnswer(state) {
   return closeQuestion(updatedState, getOtherTeam(state.currentTeam));
 }
 
-function resolveIncorrectAnswer(state) {
-  const updatedStats = {
-    ...state.stats,
-    incorrect: state.stats.incorrect + 1,
+export function resolveIncorrectAnswer(state) {
+  const answeringTeam = state.currentResponder || state.currentTeam;
+  const opponent = getOtherTeam(answeringTeam);
+  const updatedBoard = [...state.board];
+  updatedBoard[state.selectedCell] = opponent;
+
+  const winnerResult = checkWinner(updatedBoard);
+  const updatedState = {
+    ...state,
+    board: updatedBoard,
+    teams: {
+      ...state.teams,
+      [opponent]: {
+        ...state.teams[opponent],
+        score: state.teams[opponent].score + 1,
+      },
+    },
+    stats: {
+      ...state.stats,
+      incorrect: state.stats.incorrect + 1,
+    },
   };
 
-  if (state.settings.stealEnabled && state.currentResponder === state.currentTeam) {
-    const stealingTeam = getOtherTeam(state.currentTeam);
+  if (winnerResult.winner) {
     return {
-      ...state,
-      currentResponder: stealingTeam,
-      stealFor: stealingTeam,
-      answerVisible: false,
-      timerRemaining: state.settings.timerDuration,
-      stats: updatedStats,
+      ...closeQuestion(updatedState, opponent),
+      status: 'winner',
+      winningCombination: winnerResult.combination,
+      result: {
+        type: 'winner',
+        winner: winnerResult.winner,
+        title: `${state.teams[winnerResult.winner].name} Wins!`,
+      },
     };
   }
 
-  return closeQuestion({ ...state, stats: updatedStats }, getOtherTeam(state.currentTeam));
+  if (isDraw(updatedBoard)) {
+    return {
+      ...closeQuestion(updatedState, opponent),
+      status: 'draw',
+      result: {
+        type: 'draw',
+        title: 'It is a Draw!',
+        message: 'Every cell is filled and no team made three in a row.',
+      },
+    };
+  }
+
+  return closeQuestion(updatedState, opponent);
 }
 
 export function GameProvider({ children }) {
