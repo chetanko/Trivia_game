@@ -6,6 +6,7 @@ import ScoreBoard from '../components/ScoreBoard';
 import WinnerModal from '../components/WinnerModal';
 import { useGame } from '../context/GameContext';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { evaluateSelectedOption } from '../utils/answerSelection';
 import { playSoundEffect } from '../utils/sound';
 
 export default function Game({ navigate }) {
@@ -54,6 +55,12 @@ export default function Game({ navigate }) {
     markAnswer(false);
   }
 
+  function handleSelectOption(optionKey) {
+    const isCorrect = evaluateSelectedOption(activeGame.activeQuestion, optionKey);
+    playSoundEffect(isCorrect ? 'correct' : 'incorrect', activeGame.settings.soundEnabled);
+    markAnswer(isCorrect);
+  }
+
   function handlePlayAgain() {
     playAgain();
     navigate('game');
@@ -98,6 +105,7 @@ export default function Game({ navigate }) {
         onIncorrect={handleIncorrect}
         onReveal={revealAnswer}
         onSkip={skipQuestion}
+        onSelectOption={handleSelectOption}
       />
       <WinnerModal game={activeGame} onPlayAgain={handlePlayAgain} onNewGame={handleNewGame} onHome={handleHome} />
     </main>

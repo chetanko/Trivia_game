@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaCheck, FaEye, FaForward, FaXmark } from 'react-icons/fa6';
 
-export default function QuestionModal({ game, onCorrect, onIncorrect, onReveal, onSkip }) {
+export default function QuestionModal({ game, onCorrect, onIncorrect, onReveal, onSkip, onSelectOption }) {
   const question = game.activeQuestion;
 
   return (
@@ -54,10 +54,16 @@ export default function QuestionModal({ game, onCorrect, onIncorrect, onReveal, 
               {question.options.map((option) => {
                 const isCorrect = game.answerVisible && option.key === question.correctAnswer;
                 return (
-                  <div key={option.key} className={`answer-option ${isCorrect ? 'answer-option-correct' : ''}`}>
+                  <button
+                    key={option.key}
+                    type="button"
+                    className={`answer-option ${isCorrect ? 'answer-option-correct' : ''}`}
+                    onClick={() => onSelectOption(option.key)}
+                    aria-label={`Select answer ${option.key}: ${option.text}`}
+                  >
                     <span>{option.key}</span>
                     <p>{option.text}</p>
-                  </div>
+                  </button>
                 );
               })}
             </div>

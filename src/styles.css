@@ -720,6 +720,18 @@
     background: rgba(255, 255, 255, 0.08);
     padding: 1rem;
     color: white;
+    cursor: pointer;
+    text-align: left;
+    transition:
+      border-color 180ms ease,
+      background 180ms ease,
+      transform 180ms ease;
+  }
+
+  .answer-option:hover {
+    border-color: #f4b942;
+    background: rgba(244, 185, 66, 0.14);
+    transform: translateY(-1px);
   }
 
   .answer-option span {
