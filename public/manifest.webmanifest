@@ -1,0 +1,9 @@
+{
+  "name": "Classroom Trivia Tic-Tac-Toe",
+  "short_name": "Trivia TTT",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6fbf7",
+  "theme_color": "#101820",
+  "description": "A teacher-led classroom trivia tic-tac-toe game."
+}
