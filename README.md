@@ -78,6 +78,25 @@ src/
 
 No environment variables or backend services are required.
 
+## Deploy To Firebase Hosting
+
+This project includes Firebase Hosting config for project ID `tictactoe-trivia`.
+
+```bash
+npm install
+npm run build
+firebase deploy --only hosting
+```
+
+On Windows PowerShell, use the `.cmd` shims if script execution is blocked:
+
+```bash
+npm.cmd run build
+firebase.cmd deploy --only hosting
+```
+
+If `firebase init hosting` fails while adding Firebase resources with `403 PERMISSION_DENIED`, open the project in the Firebase Console, make sure your Google account has Owner or Firebase Admin access, add Firebase to the existing Google Cloud project, then rerun the deploy command.
+
 ## Security Note
 
 `npm audit --omit=dev` currently reports high-severity advisories in `xlsx` with no available upstream fix. SheetJS is included because Excel upload support was a project requirement. The app parses teacher-selected local files only, validates the format, and rejects quiz files larger than 2 MB.
